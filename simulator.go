@@ -5,3 +5,11 @@ var preMemBuff = [2]int{-1, -1}
 var preALUBuff = [2]int{-1, -1}
 var postMemBuff = [2]int{-1, -1}
 var postAluBuff = [2]int{-1, -1}
+
+func Simulate() {
+
+}
+
+func Cycle() {
+
+}

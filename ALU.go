@@ -1,9 +1,17 @@
 package main
 
-var ALUResult uint16
+var ALUResult int
 
-func ALUOpI(entry1 uint16, immediate uint16) {
-	switch opcode {
+func ALU(ins Instruction) int {
+	if ins.instructionType == "I" {
+		ALUOpI(Registers[ins.rn], int(ins.immediate), ins.op)
+	} else {
+		ALUOp(Registers[ins.rn], Registers[ins.rm], ins.op)
+	}
+	return ALUResult
+}
+func ALUOpI(entry1 int, immediate int, op string) {
+	switch op {
 	case "ADDI":
 		ALUResult = entry1 + immediate
 	case "SUBI":
@@ -11,8 +19,8 @@ func ALUOpI(entry1 uint16, immediate uint16) {
 	}
 }
 
-func ALUOp(entry1 uint16, entry2 uint16) {
-	switch opcode {
+func ALUOp(entry1 int, entry2 int, op string) {
+	switch op {
 	case "AND":
 		ALUResult = entry1 & entry2
 	case "ADD":
