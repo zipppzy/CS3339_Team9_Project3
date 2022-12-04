@@ -6,6 +6,8 @@ type block struct {
 	tag   int
 	word1 int
 	word2 int
+	//value of block as a 64 bit num
+	value int
 }
 
 var CacheSets [4][2]block
@@ -23,14 +25,15 @@ var word2Mask = 4294967295 << 32
 func StoreMem(address int, value int) {
 	cacheHit, blockNum := checkCacheHit(address)
 	var setNum = (address & setMask) >> 3
-	var word1Val = value & word1Mask
-	var word2Val = value & word2Mask >> 32
+	var word1Val = value & word1Mask >> 32
+	var word2Val = value & word2Mask
 	if cacheHit {
 		CacheSets[setNum][blockNum].word1 = word1Val
 		CacheSets[setNum][blockNum].word2 = word2Val
+		CacheSets[setNum][blockNum].value = value
 	} else {
 		var tag = (address & tagMask) >> 5
-		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val}
+		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: value}
 		//flip lruBit
 		if lruBits[setNum] == 0 {
 			lruBits[setNum] = 1
@@ -41,12 +44,12 @@ func StoreMem(address int, value int) {
 	Mem[address] = value
 }
 
-func LoadMem(address int) (int, int) {
+func LoadMem(address int) int {
 	var setNum = (address & setMask) >> 3
 	var tag = (address & tagMask) >> 5
 	cacheHit, blockNum := checkCacheHit(address)
 	if cacheHit {
-		return CacheSets[setNum][blockNum].word1, CacheSets[setNum][blockNum].word2
+		return CacheSets[setNum][blockNum].value
 	} else {
 		//find which two addresses to load to cache
 		var address1 int
@@ -59,8 +62,10 @@ func LoadMem(address int) (int, int) {
 			address2 = address
 		}
 
+		combinedVal := (Mem[address1] << 32) + Mem[address2]
+
 		//load into cache
-		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: Mem[address1], word2: Mem[address2]}
+		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: Mem[address1], word2: Mem[address2], value: combinedVal}
 
 		//flip lruBit
 		if lruBits[setNum] == 0 {
@@ -69,7 +74,7 @@ func LoadMem(address int) (int, int) {
 			lruBits[setNum] = 0
 		}
 
-		return int(Mem[address1]), int(Mem[address2])
+		return combinedVal
 	}
 }
 
