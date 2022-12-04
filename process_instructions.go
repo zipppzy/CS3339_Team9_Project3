@@ -36,7 +36,7 @@ func ProcessInstructionList(list []Instruction) {
 			var value uint64
 			value, _ = strconv.ParseUint(list[i].rawInstruction, 2, 32)
 			list[i].memValue = parse2Complement(value, 32)
-			Mem[int(list[i].memLoc)] = parse2Complement(value, 32)
+			Mem[int(list[i].memLoc)] = int(parse2Complement(value, 32))
 		}
 	}
 }
@@ -242,6 +242,6 @@ func ExecuteInstruction(ins Instruction) {
 	case "LDUR":
 		Registers[ins.rt] = int(Mem[Registers[ins.rn]+int(ins.address)*4])
 	case "STUR":
-		Mem[Registers[ins.rn]+int(ins.address)*4] = int64(Registers[ins.rt])
+		Mem[Registers[ins.rn]+int(ins.address)*4] = Registers[ins.rt]
 	}
 }
