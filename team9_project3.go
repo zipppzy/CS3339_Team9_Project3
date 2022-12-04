@@ -24,6 +24,7 @@ type Instruction struct {
 	shiftCode       uint8
 	field           uint32
 	memValue        int64
+	aluResult       int
 }
 
 var InstructionList []Instruction
