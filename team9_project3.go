@@ -48,4 +48,6 @@ func main() {
 
 	WriteInstructionExecution(*outputFilePathPtr+"_sim.txt", InstructionList)
 
+	Simulate()
+
 }

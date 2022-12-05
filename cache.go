@@ -92,3 +92,19 @@ func CheckCacheHit(address int) (bool, int) {
 		return false, -1
 	}
 }
+
+func LoadInstruction(ins Instruction) {
+	var setNum = (int(ins.memLoc) & setMask) >> 3
+	var tag = (int(ins.memLoc) & tagMask) >> 5
+
+	var word1Val = int(ins.lineValue) & word1Mask >> 32
+	var word2Val = int(ins.lineValue) & word2Mask
+
+	CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: int(ins.lineValue)}
+	//flip lruBit
+	if lruBits[setNum] == 0 {
+		lruBits[setNum] = 1
+	} else {
+		lruBits[setNum] = 0
+	}
+}
