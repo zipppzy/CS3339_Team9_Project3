@@ -71,7 +71,7 @@ func Issue() {
 			}
 
 			//check PostALUBuff for Raw hazard
-			if !rawHazard {
+			if !rawHazard && len(postALUBuff) != 0 {
 				temp := <-postALUBuff
 				if isRawHazard(InstructionList[temp[0]], InstructionList[element]) {
 					rawHazard = true

@@ -128,7 +128,7 @@ func PrintCycle(f *os.File) {
 		}
 	}
 
-	_, err = fmt.Fprintf(f, "\nData\n")
+	_, err = fmt.Fprintf(f, "\nData")
 	key := int(InstructionList[BreakPoint+1].memLoc)
 	largestKey := key
 	for i := range Mem {
