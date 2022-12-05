@@ -13,7 +13,7 @@ type block struct {
 var CacheSets [4][2]block
 
 // indicates which block in each set was least recently used
-var lruBits = [4]int{0, 0, 0, 0}
+var LruBits = [4]int{0, 0, 0, 0}
 
 var tagMask = 4294967264
 var setMask = 24
@@ -35,12 +35,12 @@ func StoreMem(address int, value int) {
 		CacheSets[setNum][blockNum].dirty = 1
 	} else {
 		var tag = (address & tagMask) >> 5
-		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, dirty: 1, tag: tag, word1: word1Val, word2: word2Val, value: value}
+		CacheSets[setNum][LruBits[setNum]] = block{valid: 1, dirty: 1, tag: tag, word1: word1Val, word2: word2Val, value: value}
 		//flip lruBit
-		if lruBits[setNum] == 0 {
-			lruBits[setNum] = 1
+		if LruBits[setNum] == 0 {
+			LruBits[setNum] = 1
 		} else {
-			lruBits[setNum] = 0
+			LruBits[setNum] = 0
 		}
 	}
 	Mem[address] = value
@@ -67,13 +67,13 @@ func LoadMem(address int) int {
 		combinedVal := (Mem[address1] << 32) + Mem[address2]
 
 		//load into cache
-		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: Mem[address1], word2: Mem[address2], value: combinedVal}
+		CacheSets[setNum][LruBits[setNum]] = block{valid: 1, tag: tag, word1: Mem[address1], word2: Mem[address2], value: combinedVal}
 
 		//flip lruBit
-		if lruBits[setNum] == 0 {
-			lruBits[setNum] = 1
+		if LruBits[setNum] == 0 {
+			LruBits[setNum] = 1
 		} else {
-			lruBits[setNum] = 0
+			LruBits[setNum] = 0
 		}
 
 		return combinedVal
@@ -101,11 +101,11 @@ func LoadInstruction(ins Instruction) {
 	var word1Val = int(ins.lineValue) >> 32
 	var word2Val = int(ins.lineValue) & word2Mask
 
-	CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: int(ins.lineValue)}
+	CacheSets[setNum][LruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: int(ins.lineValue)}
 	//flip lruBit
-	if lruBits[setNum] == 0 {
-		lruBits[setNum] = 1
+	if LruBits[setNum] == 0 {
+		LruBits[setNum] = 1
 	} else {
-		lruBits[setNum] = 0
+		LruBits[setNum] = 0
 	}
 }

@@ -35,7 +35,7 @@ var Registers [32]int
 var Mem = make(map[int]int)
 
 func main() {
-	inputFilePathPtr := flag.String("i", "executionTest.txt", "input file path")
+	inputFilePathPtr := flag.String("i", "test1_Immed_bin.txt", "input file path")
 	outputFilePathPtr := flag.String("o", "out", "output file path")
 
 	flag.Parse()
@@ -46,8 +46,6 @@ func main() {
 
 	WriteInstructions(*outputFilePathPtr+"_dis.txt", InstructionList)
 
-	WriteInstructionExecution(*outputFilePathPtr+"_sim.txt", InstructionList)
-
-	Simulate()
+	Simulate(*outputFilePathPtr + ".txt")
 
 }
