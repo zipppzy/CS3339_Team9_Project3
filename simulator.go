@@ -103,11 +103,11 @@ func PrintCycle(f *os.File) {
 	for y := 0; y < 4; y++ {
 		_, err = fmt.Fprintf(f, "\tEntry %d:\t[instruction]\n", y)
 	}
-	_, err = fmt.Fprintf(f, "\nPre_ALU Queue:\n")
+	_, err = fmt.Fprintf(f, "Pre_ALU Queue:\n")
 	for y := 0; y < 2; y++ {
 		_, err = fmt.Fprintf(f, "\tEntry %d:\t[instruction]\n", y)
 	}
-	_, err = fmt.Fprintf(f, "\nPost_ALU Queue:\n")
+	_, err = fmt.Fprintf(f, "Post_ALU Queue:\n")
 	_, err = fmt.Fprintf(f, "\tEntry 0:\t[instruction]\n")
 	_, err = fmt.Fprintf(f, "Pre_MEM Queue:\n")
 	for y := 0; y < 2; y++ {
