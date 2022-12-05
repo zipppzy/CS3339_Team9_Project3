@@ -17,15 +17,16 @@ var lruBits = [4]int{0, 0, 0, 0}
 
 var tagMask = 4294967264
 var setMask = 24
-var word1Mask = 4294967295
-var word2Mask = 4294967295 << 32
+
+// var word1Mask = 4294967295
+var word2Mask = 4294967295
 
 //Set# = (address/4)%4
 
 func StoreMem(address int, value int) {
 	cacheHit, blockNum := CheckCacheHit(address)
 	var setNum = (address & setMask) >> 3
-	var word1Val = value & word1Mask >> 32
+	var word1Val = value >> 32
 	var word2Val = value & word2Mask
 	if cacheHit {
 		CacheSets[setNum][blockNum].word1 = word1Val
@@ -97,7 +98,7 @@ func LoadInstruction(ins Instruction) {
 	var setNum = (int(ins.memLoc) & setMask) >> 3
 	var tag = (int(ins.memLoc) & tagMask) >> 5
 
-	var word1Val = int(ins.lineValue) & word1Mask >> 32
+	var word1Val = int(ins.lineValue) >> 32
 	var word2Val = int(ins.lineValue) & word2Mask
 
 	CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: int(ins.lineValue)}
