@@ -14,8 +14,15 @@ var PreALUBuff = make(chan int, 2)
 var postMemBuff = make(chan [2]int, 1)
 var postALUBuff = make(chan [2]int, 1)
 
-func Simulate() {
+var Break bool = false
+var cycleNum = 0
 
+func Simulate() {
+	for len(postALUBuff) != 0 || len(postMemBuff) != 0 || len(PreALUBuff) != 0 || len(PreMemBuff) != 0 {
+		Cycle()
+
+		cycleNum++
+	}
 }
 
 func Cycle() {
@@ -63,4 +70,11 @@ func Cycle() {
 		Issue()
 	}
 
+	if !Break {
+		for i := 0; i < 2; i++ {
+			if Fetch() {
+				break
+			}
+		}
+	}
 }
