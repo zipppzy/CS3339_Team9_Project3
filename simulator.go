@@ -54,7 +54,7 @@ func Cycle() {
 
 	if len(PreALUBuff) != 0 {
 		insIndex := <-PreALUBuff
-		var AluOut = [2]int{insIndex, ALU(InstructionList[insIndex])}
+		var AluOut = [2]int{ALU(InstructionList[insIndex]), insIndex}
 		postALUBuff <- AluOut
 	}
 
