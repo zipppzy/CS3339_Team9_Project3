@@ -59,4 +59,8 @@ func Cycle() {
 		}
 	}
 
+	if len(PreIssueBuff) != 0 {
+		Issue()
+	}
+
 }
