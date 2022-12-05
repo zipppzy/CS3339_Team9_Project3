@@ -13,9 +13,6 @@ var PCindex = 0
 // index where Break instruction is
 var BreakPoint int
 
-// Cycle Number
-var Cycle_Num int = 1
-
 // ReadBinary reads text file and makes Instructions and adds them to the InstructionList
 func ReadBinary(filePath string) {
 	file, err := os.Open(filePath)
