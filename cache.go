@@ -23,7 +23,7 @@ var word2Mask = 4294967295 << 32
 //Set# = (address/4)%4
 
 func StoreMem(address int, value int) {
-	cacheHit, blockNum := checkCacheHit(address)
+	cacheHit, blockNum := CheckCacheHit(address)
 	var setNum = (address & setMask) >> 3
 	var word1Val = value & word1Mask >> 32
 	var word2Val = value & word2Mask
@@ -31,9 +31,10 @@ func StoreMem(address int, value int) {
 		CacheSets[setNum][blockNum].word1 = word1Val
 		CacheSets[setNum][blockNum].word2 = word2Val
 		CacheSets[setNum][blockNum].value = value
+		CacheSets[setNum][blockNum].dirty = 1
 	} else {
 		var tag = (address & tagMask) >> 5
-		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, tag: tag, word1: word1Val, word2: word2Val, value: value}
+		CacheSets[setNum][lruBits[setNum]] = block{valid: 1, dirty: 1, tag: tag, word1: word1Val, word2: word2Val, value: value}
 		//flip lruBit
 		if lruBits[setNum] == 0 {
 			lruBits[setNum] = 1
@@ -47,7 +48,7 @@ func StoreMem(address int, value int) {
 func LoadMem(address int) int {
 	var setNum = (address & setMask) >> 3
 	var tag = (address & tagMask) >> 5
-	cacheHit, blockNum := checkCacheHit(address)
+	cacheHit, blockNum := CheckCacheHit(address)
 	if cacheHit {
 		return CacheSets[setNum][blockNum].value
 	} else {
@@ -78,7 +79,7 @@ func LoadMem(address int) int {
 	}
 }
 
-func checkCacheHit(address int) (bool, int) {
+func CheckCacheHit(address int) (bool, int) {
 	var tag = (address & tagMask) >> 5
 	var setNum = (address & setMask) >> 3
 
