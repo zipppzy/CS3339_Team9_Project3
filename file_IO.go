@@ -13,6 +13,9 @@ var PCindex = 0
 // index where Break instruction is
 var BreakPoint int
 
+// Cycle Number
+var Cycle_Num int = 1
+
 // ReadBinary reads text file and makes Instructions and adds them to the InstructionList
 func ReadBinary(filePath string) {
 	file, err := os.Open(filePath)
@@ -227,5 +230,45 @@ func WriteInstructionExecution(filePath string, list []Instruction) {
 		PCindex++
 		cycle++
 	}
+}
 
+func PrintCycle() {
+	fmt.Printf("Cycle: %d\n", Cycle_Num)
+	fmt.Print("Pre-Issue Buffer:")
+	y := 0
+	for y < 4 {
+		fmt.Printf("\tEntry %d:\t[instruction]", y)
+	}
+	fmt.Print("\nPre_ALU Queue:")
+	y = 0
+	for y < 2 {
+		fmt.Printf("\tEntry %d:\t[instruction]", y)
+	}
+	fmt.Print("\nPost_ALU Queue:")
+	fmt.Print("\tEntry 0:\t[instruction]")
+	fmt.Print("Pre_MEM Queue:")
+	y = 0
+	for y < 2 {
+		fmt.Printf("\tEntry %d:\t[instruction]", y)
+	}
+	fmt.Print("Post_MEM Queue:")
+	fmt.Print("\tEntry 0:\t[instruction]\n")
+	fmt.Print("Registers")
+	fmt.Print("R00:   [int(R0)]   [int(R1)]   [int(R7)]")
+	fmt.Print("R08:   [int(R8)]   [int(R9)]   [int(R15)]")
+	fmt.Print("R16:   [int(R16)]   [int(R17)]   [int(R23)]")
+	fmt.Print("R24:   [int(R24)]   [int(R25)]   [int(R31)]\n")
+	fmt.Print("Cache")
+	fmt.Printf("Set 0: LRU = %d", Cycle_Num)
+	y = 0
+	for y < 2 {
+		fmt.Printf("\tEntry %d:\t[(valid bit, dirty bit, int(tag))<word0,word1>]", y)
+	}
+	fmt.Printf("Set 3: LRU = %d", Cycle_Num)
+	y = 0
+	for y < 2 {
+		fmt.Printf("\tEntry %d:\t[(valid bit, dirty bit, int(tag))<word0,word1>]", y)
+	}
+	fmt.Print("\nData")
+	fmt.Print("[firstDataAddress][tab][display 8 data words as integers with tabs in between]...[continue until the last data word]")
 }
